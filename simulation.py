@@ -136,6 +136,11 @@ def dummify(data, order_mapper, idvar=None):
     # return pd.get_dummies(dumdata)
 
     data = data.copy()
+    
+    if order_mapper is None:
+        # TODO: Need more specific inputs. Also might be better to add order as a simple list {x0: [o1, o2], 'x1': [01, 02]}
+        {c: {k: i for k, i in enumerate(data[c].unique())} for c in data.columns}
+        
 
     to_dummify = list(order_mapper.keys())
     dumdata = pd.get_dummies(data.replace(order_mapper), columns=to_dummify)
@@ -169,3 +174,7 @@ def bound_data(x, lower, upper):
 
 if __name__ == '__main__':
     print()
+    exp = create_factorial_design(2, 2, n=12)
+    exp = dummify(exp, order_mapper={'x0': [0,1], 'x1':[0,1]})
+    betas = make_betas(0, 0)
+    simulate(exp, betas)
